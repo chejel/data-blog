@@ -1,0 +1,19 @@
+---
+title: "Blog"
+subtitle: ""
+listing:
+  contents: posts
+  sort: "date desc"
+  type: default
+  categories: true
+  sort-ui: false
+  filter-ui: false
+  fields: [date, title, description, categories, image]
+  image-height: 150px
+page-layout: full
+title-block-banner: true
+---
+
+Exploring datasets from the <a href="https://github.com/rfordatascience/tidytuesday" target="_blank">Tidy Tuesday</a> community project and other sources, and putting together coding reference sheets
+<hr />
+

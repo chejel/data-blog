@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.335">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="">
+<meta name="dcterms.date" content="2021-07-27">
+<meta name="description" content="Identifying US municipalities that are a name, or part of their name, with that of a country or international city.">
+
+<title>Jennifer Cheng - International Place Names Inside the U.S.</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Jennifer Cheng</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html">
+ <span class="menu-text">Blog</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="https://chejel.github.io/portfolio">
+ <span class="menu-text">Work</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="mailto:chejenj@gmail.com"><i class="bi bi-envelope" role="img" aria-label="Email">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/chejel"><i class="bi bi-github" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">International Place Names Inside the U.S.</h1>
+                  <div>
+        <div class="description">
+          Identifying US municipalities that are a name, or part of their name, with that of a country or international city.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">map</div>
+                <div class="quarto-category">R</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">July 27, 2021</p>
+      </div>
+    </div>
+    
+      <div>
+      <div class="quarto-title-meta-heading">Modified</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date-modified">April 30, 2023</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#gathering-the-data" id="toc-gathering-the-data" class="nav-link active" data-scroll-target="#gathering-the-data">Gathering the data</a></li>
+  <li><a href="#matching-countries" id="toc-matching-countries" class="nav-link" data-scroll-target="#matching-countries">Matching countries</a></li>
+  <li><a href="#matching-international-cities" id="toc-matching-international-cities" class="nav-link" data-scroll-target="#matching-international-cities">Matching international cities</a></li>
+  <li><a href="#one-final-thing" id="toc-one-final-thing" class="nav-link" data-scroll-target="#one-final-thing">One Final Thing</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<p>This post describes how I put together the dataset for <a href="https://chejel.github.io/intl-cities-us" target="_blank">this map</a> that finds US municipalities that match or include as part of its name a country or international city in English.</p>
+<a href="https://chejel.github.io/intl-cities-us" target="_blank"><img src="./intl-cities-ss.png" alt="Screenshot of project page" width="450"></a>
+<hr>
+<section id="gathering-the-data" class="level2">
+<h2 class="anchored" data-anchor-id="gathering-the-data">Gathering the data</h2>
+<section id="dataset-names-of-municipalities-in-the-us" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-names-of-municipalities-in-the-us">Dataset: Names of municipalities in the US</h4>
+<p>The <strong><a href="https://www.usgs.gov/us-board-on-geographic-names">U.S. Board on Geographic Names</a></strong> has available the names of <strong>geographic entities</strong> in U.S. states, including municipalities, buildings, properties, natural features and more. Data is also available on geographic names across the world.</p>
+<p>For this exercise, I <a href="https://prd-tnm.s3.amazonaws.com/index.html?prefix=StagedProducts/GeographicNames/Topical/">downloadeded the file</a> <code>PopulatedPlaces_National_Text.zip</code> via the <a href="https://www.usgs.gov/us-board-on-geographic-names/domestic-names">Domestic Names</a> page:</p>
+<p>After scanning through the dataset, I’m removing places with <code>(historical)</code> in the name and without a geographic location provided.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>us_muni_edit <span class="ot">&lt;-</span> us_muni <span class="sc">%&gt;%</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">str_detect</span>(feature_name, <span class="fu">regex</span>(<span class="st">"(historical)"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>prim_lat_dec<span class="sc">==</span><span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove white space</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">feature_name =</span> <span class="fu">str_squish</span>(feature_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="dataset-names-of-countries-and-international-cities" class="level4">
+<h4 class="anchored" data-anchor-id="dataset-names-of-countries-and-international-cities">Dataset: Names of countries and international cities</h4>
+<p>The <code>maps</code> <a href="https://cran.r-project.org/web/packages/maps/index.html">package</a> provides a list of cities via the <code>world.cities</code> dataframe, which includes the country name, population, latitude and longitude coordinates, and whether the city is the capital.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(maps<span class="sc">::</span>world.cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 43,645
+Columns: 6
+$ name        &lt;chr&gt; "'Abasan al-Jadidah", "'Abasan al-Kabirah", "'Abdul Hakim"…
+$ country.etc &lt;chr&gt; "Palestine", "Palestine", "Pakistan", "Kuwait", "Palestine…
+$ pop         &lt;int&gt; 5629, 18999, 47788, 21817, 2456, 3434, 9198, 5492, 22706, …
+$ lat         &lt;dbl&gt; 31.31, 31.32, 30.55, 29.36, 32.03, 32.03, 9.77, 2.75, 32.0…
+$ long        &lt;dbl&gt; 34.34, 34.35, 72.11, 47.98, 35.07, 35.20, 44.65, 46.30, 45…
+$ capital     &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</code></pre>
+</div>
+</div>
+<ul>
+<li>To narrow down the more than 43,500 cities, I’ll filter for only cities with <strong>more than 1 million residents</strong>.</li>
+<li>For each country and international city name, I will add to the end of each name <code>\\b</code>, the <strong>regular expression</strong> marking that it’s the end of the word. This way, I will be able to search for US municipalities that contain the <strong>name on its own</strong>, either by itself or with another word but not as part of a word: This would include “<em>Canada</em> Shores, Michigan” but not “<em>Jordan</em>town, New Jersey.”</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cities_1m <span class="ot">&lt;-</span> maps<span class="sc">::</span>world.cities <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># include only cities with more than 1m people</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(pop <span class="sc">&gt;</span> <span class="dv">1000000</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove US cities</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country.etc <span class="sc">!=</span> <span class="st">"USA"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add regex to city and country names so that results won't return int'l names within a US city</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">city_regex =</span> <span class="fu">paste0</span>(name, <span class="st">"</span><span class="sc">\\</span><span class="st">b"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">country_regex =</span> <span class="fu">paste0</span>(country.etc, <span class="st">"</span><span class="sc">\\</span><span class="st">b"</span>))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># since I'm taking a random sample of five rows, I will use set.seed() to get the same five rows each time the code is run</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">10</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">sample_n</span>(cities_1m, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      name  country.etc      pop    lat   long capital  city_regex
+1    Kazan       Russia  1104802  55.75  49.13       0    Kazan\\b
+2    Delhi        India 11215130  28.67  77.21       0    Delhi\\b
+3 Pretoria South Africa  1687779 -25.73  28.22       1 Pretoria\\b
+4   Tehran         Iran  7160094  35.67  51.43       1   Tehran\\b
+5     Kobe        Japan  1535384  34.68 135.17       0     Kobe\\b
+    country_regex
+1       Russia\\b
+2        India\\b
+3 South Africa\\b
+4         Iran\\b
+5        Japan\\b</code></pre>
+</div>
+</div>
+<hr>
+</section>
+</section>
+<section id="matching-countries" class="level2">
+<h2 class="anchored" data-anchor-id="matching-countries">Matching countries</h2>
+<p>To <strong>“match” US names to country names</strong>:</p>
+<ul>
+<li>The column of country names, which will have repeated names, from the <code>cities_1m</code> dataframe (above) will be <strong>separated by a vertical bar</strong> (<code>|</code>) so that each country name will be searched for among the column of US names and if found, the US names containing a country name will be “extracted” (i.e.&nbsp;kept) in the final list. This will go in the <code>match</code> column.</li>
+<li>Add a column containing the continent name based on the country names in the <code>match</code> column using the <code>countrycode</code> package. (<a href="https://stackoverflow.com/questions/64433772/adding-continent-region-column-to-data-frame-using-countrycode-package">source</a>)</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>country_matches <span class="ot">&lt;-</span> us_muni_edit <span class="sc">%&gt;%</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># match US city to country names</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">match =</span> <span class="fu">str_extract</span>(feature_name, <span class="fu">paste</span>(cities_1m<span class="sc">$</span>country_regex, <span class="at">collapse=</span><span class="st">"|"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(match) <span class="sc">%&gt;%</span> <span class="co"># remove US names that did not "match" any country name</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add continent</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">continent =</span> countrycode<span class="sc">::</span><span class="fu">countrycode</span>(<span class="at">sourcevar =</span> match,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">origin =</span> <span class="st">"country.name"</span>, </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">destination =</span> <span class="st">"continent"</span>))</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># narrow down variables</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A sample of the final dataframe of US municipalities that now includes the name of a country.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># set.seed() lets you see the same random sample each time you run the code</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sample_n</span>(country_matches, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   feature_id               feature_name   feature_class    state_name
+1     1379539                China Creek Populated Place         Texas
+2     1554236                       Cuba Populated Place West Virginia
+3      607936                       Peru Populated Place Massachusetts
+4     2481457            Armenia Terrace Populated Place       Florida
+5      669699                      Egypt Populated Place   Mississippi
+6      490449                       Cuba Populated Place      Kentucky
+7     1049099              Poland Center Populated Place          Ohio
+8      867976                    Lebanon Populated Place New Hampshire
+9      942484 Angola Lake Shore Addition Populated Place      New York
+10      57707                      Egypt Populated Place      Arkansas
+   state_numeric  county_name county_numeric         map_name date_created
+1             48     San Saba            411 Blucher Mountain   11/30/1979
+2             54      Jackson             35       Sandyville   06/27/1980
+3             25    Berkshire              3             Peru   02/24/1974
+4             12 Hillsborough             57  Sulphur Springs   07/18/2008
+5             28       Holmes             51       Montgomery   09/24/1980
+6             21       Graves             83             Cuba   09/20/1979
+7             39     Mahoning             99         Campbell   07/12/1979
+8             33      Grafton              9          Hanover   08/27/1980
+9             36         Erie             29          Farnham   01/23/1980
+10             5    Craighead             31             Cash   04/30/1980
+   date_edited bgn_type bgn_authority bgn_date prim_lat_dms prim_long_dms
+1   06/07/2022                                      311533N      0984723W
+2   06/07/2022                                      385928N      0814008W
+3   12/02/2019                                      422617N      0730245W
+4   06/07/2022                                      280005N      0822910W
+5   06/07/2022                                      332028N      0901638W
+6   06/07/2022                                      363506N      0883745W
+7   09/30/2019                                      410126N      0803402W
+8   06/07/2022                                      433832N      0721506W
+9   09/11/2019                                      423705N      0790554W
+10  06/07/2022                                      355205N      0905644W
+   prim_lat_dec prim_long_dec   match continent
+1      31.25906     -98.78977   China      Asia
+2      38.99119     -81.66902    Cuba  Americas
+3      42.43814     -73.04593    Peru  Americas
+4      28.00140     -82.48600 Armenia      Asia
+5      33.34123     -90.27731   Egypt    Africa
+6      36.58506     -88.62922    Cuba  Americas
+7      41.02395     -80.56729  Poland    Europe
+8      43.64229     -72.25176 Lebanon      Asia
+9      42.61811     -79.09837  Angola    Africa
+10     35.86813     -90.94568   Egypt    Africa</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="matching-international-cities" class="level2">
+<h2 class="anchored" data-anchor-id="matching-international-cities">Matching international cities</h2>
+<p>Following the same steps above, this time matching US municipalities to international city names. And:</p>
+<ul>
+<li>Joining this dataframe with the <code>cities_1m</code> in order to include the country for each city.</li>
+<li>As “Serbia and Montenegro” was given as the country for “Belgrade”, changing the name to “Serbia”.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>city_matches <span class="ot">&lt;-</span> us_muni_edit <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># match US city to int'l city names</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">match =</span> <span class="fu">str_extract</span>(feature_name, <span class="fu">paste</span>(cities_1m<span class="sc">$</span>city_regex, <span class="at">collapse=</span><span class="st">"|"</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>(match) <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add country to match (city)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(cities_1m, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"match"</span> <span class="ot">=</span> <span class="st">"name"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>lat, <span class="sc">-</span>long) <span class="sc">%&gt;%</span> <span class="co"># removing these cols from cities_1m to avoid confusion</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># change "Serbia and Montenegro" to "Serbia"</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">country.etc =</span> <span class="fu">str_replace</span>(country.etc, <span class="st">"Serbia and Montenegro"</span>, <span class="st">"Serbia"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add continent</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">continent =</span> countrycode<span class="sc">::</span><span class="fu">countrycode</span>(<span class="at">sourcevar =</span> country.etc,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">origin =</span> <span class="st">"country.name"</span>, </span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                                              <span class="at">destination =</span> <span class="st">"continent"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># add coordinates for the int'l cities using tidygeocoder pkg</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">address =</span> <span class="fu">paste0</span>(match, <span class="st">", "</span>, country.etc)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geocode</span>(address, <span class="at">method=</span><span class="st">"osm"</span>, <span class="at">lat=</span>city_lat, <span class="at">long=</span>city_long) <span class="sc">%&gt;%</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># narrow down columns</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">us_city=</span>feature_name, state_name, <span class="at">us_city_lat=</span>prim_lat_dec, <span class="at">us_city_long=</span>prim_long_dec, <span class="at">intl_city=</span>match, <span class="at">country=</span>country.etc, city_lat, city_long, continent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Passing 71 addresses to the Nominatim single address geocoder</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Query completed in: 71.3 seconds</code></pre>
+</div>
+</div>
+<p>A sample of the final dataframe for US towns and cities containing the names of international cities.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see sample of result</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample_n</span>(city_matches, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 9
+   us_city       state…¹ us_ci…² us_ci…³ intl_…⁴ country city_…⁵ city_…⁶ conti…⁷
+   &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  
+ 1 New London    North …    35.4   -80.2 London  UK         51.5  -0.128 Europe 
+ 2 Delhi         Ohio       39.1   -84.6 Delhi   India      28.6  77.2   Asia   
+ 3 Tripoli       Iowa       42.8   -92.3 Tripoli Libya      32.9  13.2   Africa 
+ 4 Paris Point   South …    34.9   -82.4 Paris   France     48.9   2.35  Europe 
+ 5 Hamburg       Kansas     38.1   -99.2 Hamburg Germany    53.6  10.0   Europe 
+ 6 Brussels      Illino…    38.9   -90.6 Brusse… Belgium    50.8   4.35  Europe 
+ 7 Melbourne     Missou…    40.1   -93.8 Melbou… Austra…   -37.8 145.    Oceania
+ 8 North Belgra… Maine      44.5   -69.8 Belgra… Serbia     44.8  20.5   Europe 
+ 9 New London    Maryla…    39.4   -77.3 London  UK         51.5  -0.128 Europe 
+10 Prague        Arkans…    34.3   -92.3 Prague  Czech …    50.1  14.4   Europe 
+# … with abbreviated variable names ¹​state_name, ²​us_city_lat, ³​us_city_long,
+#   ⁴​intl_city, ⁵​city_lat, ⁶​city_long, ⁷​continent</code></pre>
+</div>
+</div>
+<hr>
+</section>
+<section id="one-final-thing" class="level2">
+<h2 class="anchored" data-anchor-id="one-final-thing">One Final Thing</h2>
+<p>After exporting <code>city_matches</code> via <code>write_csv(city_matches, "city_matches.csv")</code>, I used <code>D3.js</code> to <a href="https://chejel.github.io/intl-cities-us">create a map</a> that lets users click a major non-US city and see the locations of US towns and cities that share the name. I’ll save <code>country_matches</code> maybe for another time.</p>
+<p>To end this post, here are the top 10 international cities that appear most frequently as or within US municipality names:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>city_matches <span class="sc">%&gt;%</span> <span class="fu">count</span>(intl_city, <span class="at">sort=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 71 × 2
+   intl_city     n
+   &lt;chr&gt;     &lt;int&gt;
+ 1 Berlin       57
+ 2 London       49
+ 3 Paris        46
+ 4 Dublin       38
+ 5 Rome         37
+ 6 Hamburg      35
+ 7 Leon         33
+ 8 Cairo        30
+ 9 Vienna       29
+10 Damascus     27
+# … with 61 more rows</code></pre>
+</div>
+</div>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">Made with <a href="https://quarto.org/">Quarto</a></div>   
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="mailto:chejenj@gmail.com">
+      <i class="bi bi-envelope" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+</body></html>

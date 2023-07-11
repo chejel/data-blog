@@ -1,0 +1,235 @@
+---
+title: "Chocolate Bars"
+author: ""
+date: "2022-03-28"
+date-modified: "2023-04-05"
+description: "A color-coded world map made from a set of chocolate bar ratings."
+categories: [ "Tidy Tuesday", R, map ]
+image: ""
+editor_options: 
+  chunk_output_type: console
+---
+## Introduction
+
+For the week of January 18, 2022, [#TidyTuesday](https://github.com/rfordatascience/tidytuesday) featured the "Chocolate Bar Ratings" dataset from [Flavors of Cacao](https://flavorsofcacao.com/chocolate_database.html). The reviews span from 2006 through 2022 and for each bar, details include the manufacturer and their location, the chocolate bean origin, ingredients and keyword-descriptions of each bar's "most memorable characteristics, and of course, the rating.
+
+As noted on the website, the chocolate included in the ratings database are a sampling of bars, not a comprehensive assessment of chocolate bars but rather rating dark chocolate bars based on one bar.
+
+
+::: {.callout-warning appearance="simple" icon=false}
+Each chocolate is evaluated from a combination of both objective qualities and subjective interpretation. A rating here only represents an experience with one bar from one batch.
+<br />
+<span style="color:#d1d1d1">(...)</span>
+<br />
+The database is narrowly focused on plain dark chocolate with an aim of appreciating the flavors of the cacao when made into chocolate. 
+:::
+
+Looking at a `glimpse` of the dataset...
+
+```{r}
+#| warning: false
+library(tidyverse)
+chocolate_raw <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2022/2022-01-18/chocolate.csv')
+
+glimpse(chocolate_raw)
+```
+
+...here are some initial observations about the variables:
+
+::: {.grid}
+::: {.g-col-10}
+| Variable | Details |
+| --- | --- |
+| Manufacturer | 580 companies |
+| Company location | 67 countries |
+| Year of review | 2006-2021 |
+| Country where bean originated | 62 countries |
+| Cocoa % | seeds (or beans) that produce chocolate |
+| Ingredients | B = beans, S = sugar, S* = sweetener (not white cane or beet sugar), C = cocoa butter, V = vanilla, L = lecithin, Sa = salt |
+| Most memorable characteristics | keywords |
+| Rating | 1-4 |
+
+:::
+:::
+
+## World Map
+
+After exploring the data, I went with mapping the countries in the dataset, color coding them by whether they:
+
+- only appear as the location of a manufacturing company
+- only appear as a bean origin country
+- or both
+```{r}
+# Are there countries that appear in both columns? (33) Use #C0EDA6
+countries_both <- chocolate_raw %>%
+  select(company_location, country_of_bean_origin) %>%
+  unique() %>%
+  # isolate countries in company_location that also appear in country_of_bean_origin
+  filter(company_location %in% unique(country_of_bean_origin)) %>%
+  # isolate only company_location and rename
+  select(country=company_location) %>%
+  unique() %>%
+  # add column that gives it green color to signify it appears in both vars
+  add_column(country_type="both")
+
+# countries that appear only in company_location (34) Use #8FBDD3
+countries_manufacturer <- chocolate_raw %>%
+  select(company_location, country_of_bean_origin) %>%
+  unique() %>%
+  filter(!company_location %in% unique(country_of_bean_origin)) %>%
+  select(country=company_location) %>%
+  unique() %>%
+  add_column(country_type="manufacturer")
+
+# countries that appear only in country_of_bean_origin (29) Use #FFF7BC
+bean_countries <- chocolate_raw %>%
+  select(company_location, country_of_bean_origin) %>%
+  unique() %>%
+  filter(!country_of_bean_origin %in% unique(company_location)) %>%
+  select(country=country_of_bean_origin) %>%
+  unique() %>%
+  add_column(country_type="bean origin")
+
+# combine above three into one df
+chocolate_map <- rbind(countries_both, countries_manufacturer, bean_countries)
+```
+
+### 1. Load world map via `rnaturalearth`
+```{r}
+library(rnaturalearth)
+world_map <- ne_countries(scale="medium",
+                          type="map_units", # to include Mauritania
+                          returnclass="sf")
+
+ggplot() +
+  geom_sf(data=world_map, size=0.25, fill="#eeeeee") +
+  theme_void()
+```
+<hr />
+
+### 2. Data cleaning
+
+a) Check if any country names in `world_map` and `chocolate_map` do not match, i.e. Which country names in `world_map` do not appear in `chocolate_map` due to spelling differences or more granular divisions within what `world_map` considers a country. Goal: Create a layer of just the countries in `chocolate_map` to "layer" on top of the `world_map` basemap.
+```{r}
+chocolate_map %>% filter(!country %in% unique(world_map$geounit))
+```
+<hr />
+b) Renaming countries in `chocolate_map` to how they appear in `world_map`.
+```{r}
+chocolate_map_edit <- chocolate_map %>%
+  # rename countries
+  mutate(country = str_replace_all(
+    country,
+    c(
+      "U.S.A." = "United States of America", # old = new
+      "Sao Tome$" = "Sao Tome and Principe",
+      "St. Lucia" = "Saint Lucia",
+      "Sao Tome & Principe" = "Sao Tome and Principe",
+      "St.Vincent-Grenadines" = "Saint Vincent and the Grenadines",
+      "U.A.E." = "United Arab Emirates",
+      "Burma" = "Myanmar",
+      "^Trinidad$" = "Trinidad and Tobago",
+      "^Congo$" = "Republic of Congo",
+      "^Tobago$" = "Trinidad and Tobago",
+      "^Principe$" = "Sao Tome and Principe",
+      "DR Congo" = "Democratic Republic of the Congo"
+    )
+  )) %>%
+  # renaming "non-countries" as the country in which they're located
+  mutate(country = str_replace_all(
+    country,
+    c(
+      "Amsterdam" = "Netherlands",
+      "Sumatra" = "Indonesia",
+      "Sulawesi" = "Indonesia"
+    )
+  )) %>%
+  # remove country of "Blend" and also "Scotland" and "Wales" as the latter two will be represented by "United Kingdom" (all three are only manufacturing countries, plus "England" and "Northern Ireland" were not included in the chocolate data)
+  filter(!country %in% c("Blend", "Scotland", "Wales")) %>%
+  # renamings will produce duplicates so remove those
+  unique()
+```
+<hr />
+c) Check: Rerun code from `a` to see if any countries from `chocolate_map` remain off of `world_map`.
+```{r}
+chocolate_map %>% filter(!country %in% unique(world_map$geounit))
+```
+<hr />
+d) Remove
+```{r}
+chocolate_map_edit <- chocolate_map_edit %>% filter(!country %in% c("U.K.", "Belgium"))
+```
+<hr />
+e) Workaround: Add a third layer for Belgium and the UK since their `geounit` in `world_map` was of regions within those countries so using the `admin` column here in place of `geounit` as used above.
+```{r}
+chocolate_map <- chocolate_map %>%
+  mutate(country = str_replace(country, "U.K.", "United Kingdom"))
+
+bel_uk_layer <- world_map %>%
+  filter(admin %in% c("Belgium", "United Kingdom")) %>%
+  left_join(chocolate_map, by=c("admin"="country"))
+```
+<hr />
+f) `right_join()` the `world_map` and `chocolate_map_edit` dataframes in order to add geographic components to `chocolate_map_edit`.
+```{r}
+combo_map <- world_map %>% right_join(chocolate_map_edit, by=c("geounit"="country"))
+```
+
+### 3. Chocolate map
+
+Adding the three layers: (1) `world_map`: Base world map + (2) `combo_map`: Countries from the chocolate data + (3) `bel_uk_layer`: Belgium and the UK
+```{r}
+#| column: screen-inset
+#| out-width: 50%
+#| fig-align: center
+
+ggplot() +
+  geom_sf(data=world_map, size=0.25, fill="#eeeeee") +
+  geom_sf(data=combo_map, aes(fill=country_type), size=0.25, show.legend=F) +
+  geom_sf(data=bel_uk_layer, aes(fill=country_type), size=0.25, show.legend=F) +
+  scale_fill_manual(values = c("both" = "#C0EDA6", # df value = color
+                               "manufacturer" = "#8FBDD3",
+                               "bean origin" = "#FFF7BC")) +
+  theme_void()
+```
+
+
+## Out of Curiosity
+
+Are there words disproportionately associated with a country where a bean originated or a a country of the manufacturing company? 
+```{r}
+library(tidytext)
+
+chocolate_raw %>%
+  unnest_tokens(word, most_memorable_characteristics) %>%
+  count(country_of_bean_origin, word, sort = TRUE) %>%
+  bind_tf_idf(term = word, document = country_of_bean_origin, n) %>% # calculates TF-IDF
+  arrange(desc(tf_idf)) %>%
+  #top_n(20, wt = tf_idf) %>%
+  filter(n>20)
+
+chocolate_raw %>%
+  unnest_tokens(word, most_memorable_characteristics) %>%
+  #count(word, country_of_bean_origin, sort = TRUE) %>%
+  count(word, company_location, sort = TRUE) %>%
+  filter(word == "smoke")
+
+# instead of going by word units, break up by placement of comma => there will be one word, two words, etc.
+chocolate_raw %>%
+  select(most_memorable_characteristics, rating) %>%
+  # split at comma
+  separate_rows(most_memorable_characteristics, sep = ',', convert = TRUE) %>%
+  #filter(str_detect(most_memorable_characteristics, regex(" "))) %>%
+  group_by(most_memorable_characteristics) %>%
+  summarize(characteristic_count = n(), mean_rating = median(rating)) %>%
+  filter(characteristic_count>20) %>% arrange(desc(mean_rating))
+
+chocolate_raw %>%
+  separate_rows(most_memorable_characteristics, sep = ',', convert = TRUE) %>%
+  mutate(most_memorable_characteristics = str_squish(most_memorable_characteristics)) %>%
+  count(country_of_bean_origin, most_memorable_characteristics, sort = TRUE) %>%
+  bind_tf_idf(term = most_memorable_characteristics, document = country_of_bean_origin, n) %>%
+  arrange(desc(tf_idf)) %>%
+  filter(n>20)
+```
+

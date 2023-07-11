@@ -1,0 +1,148 @@
+---
+title: "International Place Names Inside the U.S."
+author: ""
+date: 2021-07-27
+date-modified: 2023-04-30
+description: "Identifying US municipalities that are a name, or part of their name, with that of a country or international city."
+categories: [ map, R ]
+image: "intl-cities-thumbnail.png"
+image-alt: ""
+editor_options: 
+  chunk_output_type: console
+---
+
+This post describes how I put together the dataset for <a href="https://chejel.github.io/intl-cities-us" target="_blank">this map</a> that finds US municipalities that match or include as part of its name a country or international city in English.
+
+<a href="https://chejel.github.io/intl-cities-us" target="_blank"><img src="./intl-cities-ss.png" alt="Screenshot of project page" width="450"></a>
+<hr />
+
+## Gathering the data
+
+#### Dataset: Names of municipalities in the US
+
+The **[U.S. Board on Geographic Names](https://www.usgs.gov/us-board-on-geographic-names)** has available the names of **geographic entities** in U.S. states, including municipalities, buildings, properties, natural features and more. Data is also available on geographic names across the world.
+
+For this exercise, I [downloadeded the file](https://prd-tnm.s3.amazonaws.com/index.html?prefix=StagedProducts/GeographicNames/Topical/) `PopulatedPlaces_National_Text.zip` via the [Domestic Names](https://www.usgs.gov/us-board-on-geographic-names/domestic-names) page:
+```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
+library(tidyverse)
+library(tidygeocoder) # bulk geocoding
+
+# importing the dataset (txt file), specifying the vertical bar as the separator used in the file to distinguish between columns
+us_muni <- read.delim("./data/PopulatedPlaces_National.txt", sep ="|", header = T) %>%
+  janitor::clean_names() # transforms the all-caps variable names into lowercase for easier typing
+
+glimpse(us_muni)
+```
+After scanning through the dataset, I'm removing places with `(historical)` in the name and without a geographic location provided.
+```{r}
+us_muni_edit <- us_muni %>%
+  filter(!str_detect(feature_name, regex("(historical)"))) %>%
+  filter(!prim_lat_dec==0) %>%
+  # remove white space
+  mutate(feature_name = str_squish(feature_name))
+```
+
+
+#### Dataset: Names of countries and international cities
+
+The `maps` [package](https://cran.r-project.org/web/packages/maps/index.html) provides a list of cities via the `world.cities` dataframe, which includes the country name, population, latitude and longitude coordinates, and whether the city is the capital.
+
+```{r}
+glimpse(maps::world.cities)
+```
+
+- To narrow down the more than 43,500 cities, I'll filter for only cities with **more than 1 million residents**.
+- For each country and international city name, I will add to the end of each name `\\b`, the **regular expression** marking that it's the end of the word. This way, I will be able to search for US municipalities that contain the **name on its own**, either by itself or with another word but not as part of a word: This would include "*Canada* Shores, Michigan" but not "*Jordan*town, New Jersey."
+
+```{r}
+cities_1m <- maps::world.cities %>%
+  # include only cities with more than 1m people
+  filter(pop > 1000000) %>%
+  # remove US cities
+  filter(country.etc != "USA") %>%
+  # add regex to city and country names so that results won't return int'l names within a US city
+  mutate(city_regex = paste0(name, "\\b")) %>%
+  mutate(country_regex = paste0(country.etc, "\\b"))
+
+# since I'm taking a random sample of five rows, I will use set.seed() to get the same five rows each time the code is run
+set.seed(10)
+sample_n(cities_1m, 5)
+```
+
+<hr />
+
+## Matching countries
+
+To **"match" US names to country names**:
+
+- The column of country names, which will have repeated names, from the `cities_1m` dataframe (above) will be **separated by a vertical bar** (`|`) so that each country name will be searched for among the column of US names and if found, the US names containing a country name will be "extracted" (i.e. kept) in the final list. This will go in the `match` column.
+- Add a column containing the continent name based on the country names in the `match` column using the `countrycode` package. ([source](https://stackoverflow.com/questions/64433772/adding-continent-region-column-to-data-frame-using-countrycode-package))
+
+```{r}
+country_matches <- us_muni_edit %>%
+  # match US city to country names
+  mutate(match = str_extract(feature_name, paste(cities_1m$country_regex, collapse="|"))) %>%
+  drop_na(match) %>% # remove US names that did not "match" any country name
+  # add continent
+  mutate(continent = countrycode::countrycode(sourcevar = match,
+                                              origin = "country.name", 
+                                              destination = "continent"))
+  # narrow down variables
+```
+
+A sample of the final dataframe of US municipalities that now includes the name of a country.
+
+```{r}
+set.seed(123) # set.seed() lets you see the same random sample each time you run the code
+sample_n(country_matches, 10)
+```
+<hr />
+
+## Matching international cities
+
+Following the same steps above, this time matching US municipalities to international city names. And:
+
+- Joining this dataframe with the `cities_1m` in order to include the country for each city.
+- As "Serbia and Montenegro" was given as the country for "Belgrade", changing the name to "Serbia".
+
+```{r}
+city_matches <- us_muni_edit %>%
+  # match US city to int'l city names
+  mutate(match = str_extract(feature_name, paste(cities_1m$city_regex, collapse="|"))) %>%
+  drop_na(match) %>%
+  # add country to match (city)
+  left_join(cities_1m, by = c("match" = "name")) %>%
+  select(-lat, -long) %>% # removing these cols from cities_1m to avoid confusion
+  # change "Serbia and Montenegro" to "Serbia"
+  mutate(country.etc = str_replace(country.etc, "Serbia and Montenegro", "Serbia")) %>%
+  # add continent
+  mutate(continent = countrycode::countrycode(sourcevar = country.etc,
+                                              origin = "country.name", 
+                                              destination = "continent")) %>%
+  # add coordinates for the int'l cities using tidygeocoder pkg
+  mutate(address = paste0(match, ", ", country.etc)) %>%
+  geocode(address, method="osm", lat=city_lat, long=city_long) %>%
+  # narrow down columns
+  select(us_city=feature_name, state_name, us_city_lat=prim_lat_dec, us_city_long=prim_long_dec, intl_city=match, country=country.etc, city_lat, city_long, continent)
+```
+
+A sample of the final dataframe for US towns and cities containing the names of international cities.
+
+```{r}
+# see sample of result
+set.seed(123)
+sample_n(city_matches, 10)
+```
+<hr />
+
+## One Final Thing
+
+After exporting `city_matches` via `write_csv(city_matches, "city_matches.csv")`, I used `D3.js` to <a href="https://chejel.github.io/intl-cities-us">create a map</a> that lets users click a major non-US city and see the locations of US towns and cities that share the name. I'll save `country_matches` maybe for another time. 
+
+To end this post, here are the top 10 international cities that appear most frequently as or within US municipality names:
+
+```{r}
+city_matches %>% count(intl_city, sort=T)
+```
+
+-----

@@ -1,0 +1,31 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Jennifer Cheng"
+  navbar:
+    right:
+      - text: Blog
+        href: index.qmd 
+      - text: Work
+        href: https://chejel.github.io/portfolio
+      - icon: envelope
+        href: mailto:chejenj@gmail.com
+        aria-label: Email
+      - icon: github
+        href: https://github.com/chejel
+  page-footer:
+    left: |
+      Made with [Quarto](https://quarto.org/)
+    right: 
+      - icon: envelope
+        href: mailto:chejenj@gmail.com
+    border: false
+format:
+  html:
+    theme: theme.scss
+    css: styles.css
+
+
+

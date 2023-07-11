@@ -1,0 +1,33 @@
+/*-- scss:defaults --*/
+
+// colors
+$body-bg: #ffffff;
+$body-color: #333333;
+
+// fonts
+$font-family-base: "IBM Plex Sans" !default;
+$font-family-sans-serif: "IBM Plex Sans" !default;
+$headings-font-family: "Outfit" !default;
+$btn-font-family: "Outfit" !default;
+
+
+// font size
+$font-size-root: 1em !default;
+
+// links
+$link-color: #0081B4;
+$link-decoration: none !default;
+$link-shade-percentage: 20% !default;
+$link-hover-color: shift-color($link-color, $link-shade-percentage) !default;
+$link-hover-decoration: underline !default;
+
+// text
+$paragraph-margin-bottom:   1rem !default;
+
+// navigation
+$navbar-bg: #fff; //#FAF9F7;
+//$navbar-fg: // text and navigation colors; defaults to generated contrasting color
+$navbar-hl: #0081B4; // highlight color for links; defaults to $link-color or generated contrasting color
+
+// code block
+$code-block-bg: #f5f6fa;

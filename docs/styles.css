@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&family=Josefin+Sans:wght@300&family=Outfit:wght@200;300;400;500&family=Poppins:wght@300;400;500;600&display=swap');
+
+.navbar-title {
+  font-family: "Outfit", sans-serif; 
+  font-size: 1.25em;
+  text-transform: uppercase;
+  color: #EB455F;
+}
+
+.container {
+  display: flex;
+  gap: 1rem;
+}
+
+/* cards on landing page */
+.card {
+  border-radius: 0;
+  /*box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 3px 2px;*/
+  border: 1px solid rgba(51, 51, 51, 0.5);
+}
+
+.btn {
+  font-family: "Outfit", sans-serif !important;
+  text-transform: uppercase !important;
+  font-weight: 600 !important;
+  border-radius: 0;
+}
+
+hr {
+  border-top: 1px solid #bbb !important;
+}
+
+h1 {
+  font-size: 2.75em;
+}
+
+.sidebar nav[role=doc-toc]>ul a {
+  font-weight: 400;
+}
+
+.btn a {
+  color: #fff;
+  text-decoration: none;
+}
+
+/* nav bar */
+#quarto-header {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.menu-text {
+  font-family: "Outfit";
+  text-transform: uppercase;
+  font-size: 1.15em !important;
+  font-weight: 600;
+}
+
+pre.sourceCode {
+  border: 0.5px solid #e4e4e4 !important;  
+}
+
+/* blog page: tags/categories */
+div.quarto-post .listing-categories .listing-category {
+  border-radius: 0 !important;
+  font-size: 0.75em !important;
+  font-family: "Outfit";
+  border: 1px solid #EB455F;
+  color: #EB455F;
+  font-weight: 500 !important;
+}
+
+#quarto-margin-sidebar .quarto-listing-category {
+  border: 0.8px solid #CBE4DE;
+  padding: 0.6rem;
+}
+
+.quarto-listing-category .category-default:first-child {
+  text-transform: uppercase;
+  color: gray;
+}
+
+.quarto-listing-category .category:active {
+}
+
+.panel-caption, .figure-caption, figcaption {
+  font-size: 0.9em;
+  color: #a4a4a4;
+}
+
+/* inside post: tags/categories */
+.quarto-title .quarto-categories .quarto-category {
+  border-radius: 0 !important;
+  font-size: 0.85em !important;
+  font-family: "Outfit";
+  border: 1px solid #EB455F;
+  color: #EB455F !important; /* #B3005E;*/
+  font-weight: 500 !important;
+  opacity: 1 !important;
+}
