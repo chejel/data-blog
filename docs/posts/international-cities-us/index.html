@@ -96,6 +96,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../favicon.png" rel="icon" type="image/png">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -200,7 +201,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div>
       <div class="quarto-title-meta-heading">Modified</div>
       <div class="quarto-title-meta-contents">
-        <p class="date-modified">April 30, 2023</p>
+        <p class="date-modified">February 16, 2024</p>
       </div>
     </div>
       
@@ -218,7 +219,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#gathering-the-data" id="toc-gathering-the-data" class="nav-link active" data-scroll-target="#gathering-the-data">Gathering the data</a></li>
   <li><a href="#matching-countries" id="toc-matching-countries" class="nav-link" data-scroll-target="#matching-countries">Matching countries</a></li>
   <li><a href="#matching-international-cities" id="toc-matching-international-cities" class="nav-link" data-scroll-target="#matching-international-cities">Matching international cities</a></li>
-  <li><a href="#one-final-thing" id="toc-one-final-thing" class="nav-link" data-scroll-target="#one-final-thing">One Final Thing</a></li>
+  <li><a href="#a-final-list" id="toc-a-final-list" class="nav-link" data-scroll-target="#a-final-list">A Final List</a></li>
   </ul>
 </nav>
     </div>
@@ -263,8 +264,8 @@ $ capital     &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 </div>
 </div>
 <ul>
-<li>To narrow down the more than 43,500 cities, I’ll filter for only cities with <strong>more than 1 million residents</strong>.</li>
-<li>For each country and international city name, I will add to the end of each name <code>\\b</code>, the <strong>regular expression</strong> marking that it’s the end of the word. This way, I will be able to search for US municipalities that contain the <strong>name on its own</strong>, either by itself or with another word but not as part of a word: This would include “<em>Canada</em> Shores, Michigan” but not “<em>Jordan</em>town, New Jersey.”</li>
+<li>To narrow down the more than 43,500 cities, I’ll filter for only cities with <strong>more than 1 million residents</strong>, not including metro areas.</li>
+<li>For each country and international city name, I will add to the end of each name <code>\\b</code>, the <strong>regular expression</strong> to indicate that it’s the end of the word. This way, I will be able to search for US municipalities that contain the <strong>name on its own</strong>, either by itself or with another word but not as part of a word: This would include “<em>Canada</em> Shores, Michigan” but not “<em>Jordan</em>town, New Jersey.”</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>cities_1m <span class="ot">&lt;-</span> maps<span class="sc">::</span>world.cities <span class="sc">%&gt;%</span></span>
@@ -394,31 +395,25 @@ $ capital     &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geocode</span>(address, <span class="at">method=</span><span class="st">"osm"</span>, <span class="at">lat=</span>city_lat, <span class="at">long=</span>city_long) <span class="sc">%&gt;%</span></span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># narrow down columns</span></span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="at">us_city=</span>feature_name, state_name, <span class="at">us_city_lat=</span>prim_lat_dec, <span class="at">us_city_long=</span>prim_long_dec, <span class="at">intl_city=</span>match, <span class="at">country=</span>country.etc, city_lat, city_long, continent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Passing 71 addresses to the Nominatim single address geocoder</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Query completed in: 71.3 seconds</code></pre>
-</div>
 </div>
 <p>A sample of the final dataframe for US towns and cities containing the names of international cities.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see sample of result</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample_n</span>(city_matches, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># see sample of result</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sample_n</span>(city_matches, <span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 10 × 9
    us_city       state…¹ us_ci…² us_ci…³ intl_…⁴ country city_…⁵ city_…⁶ conti…⁷
    &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  
- 1 New London    North …    35.4   -80.2 London  UK         51.5  -0.128 Europe 
+ 1 New London    North …    35.4   -80.2 London  UK         51.5  -0.144 Europe 
  2 Delhi         Ohio       39.1   -84.6 Delhi   India      28.6  77.2   Asia   
  3 Tripoli       Iowa       42.8   -92.3 Tripoli Libya      32.9  13.2   Africa 
  4 Paris Point   South …    34.9   -82.4 Paris   France     48.9   2.35  Europe 
  5 Hamburg       Kansas     38.1   -99.2 Hamburg Germany    53.6  10.0   Europe 
- 6 Brussels      Illino…    38.9   -90.6 Brusse… Belgium    50.8   4.35  Europe 
+ 6 Brussels      Illino…    38.9   -90.6 Brusse… Belgium    50.9   4.35  Europe 
  7 Melbourne     Missou…    40.1   -93.8 Melbou… Austra…   -37.8 145.    Oceania
  8 North Belgra… Maine      44.5   -69.8 Belgra… Serbia     44.8  20.5   Europe 
- 9 New London    Maryla…    39.4   -77.3 London  UK         51.5  -0.128 Europe 
+ 9 New London    Maryla…    39.4   -77.3 London  UK         51.5  -0.144 Europe 
 10 Prague        Arkans…    34.3   -92.3 Prague  Czech …    50.1  14.4   Europe 
 # … with abbreviated variable names ¹​state_name, ²​us_city_lat, ³​us_city_long,
 #   ⁴​intl_city, ⁵​city_lat, ⁶​city_long, ⁷​continent</code></pre>
@@ -426,12 +421,12 @@ $ capital     &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 </div>
 <hr>
 </section>
-<section id="one-final-thing" class="level2">
-<h2 class="anchored" data-anchor-id="one-final-thing">One Final Thing</h2>
+<section id="a-final-list" class="level2">
+<h2 class="anchored" data-anchor-id="a-final-list">A Final List</h2>
 <p>After exporting <code>city_matches</code> via <code>write_csv(city_matches, "city_matches.csv")</code>, I used <code>D3.js</code> to <a href="https://chejel.github.io/intl-cities-us">create a map</a> that lets users click a major non-US city and see the locations of US towns and cities that share the name. I’ll save <code>country_matches</code> maybe for another time.</p>
 <p>To end this post, here are the top 10 international cities that appear most frequently as or within US municipality names:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>city_matches <span class="sc">%&gt;%</span> <span class="fu">count</span>(intl_city, <span class="at">sort=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>city_matches <span class="sc">%&gt;%</span> <span class="fu">count</span>(intl_city, <span class="at">sort=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 71 × 2
    intl_city     n
