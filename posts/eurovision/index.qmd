@@ -259,5 +259,3 @@ eurovision_earliest_yr %>%
          caption="<br />A ranking may include multiple countries. The inaugural competition in 1956 was not included due to only the winner being announced (Switzerland).",
          x=NULL, y=NULL)
 ```
-
-## Code for next time

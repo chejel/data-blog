@@ -3,6 +3,7 @@ project:
   output-dir: docs
 
 website:
+  favicon: favicon.png
   title: "Jennifer Cheng"
   navbar:
     right:
