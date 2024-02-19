@@ -2,10 +2,10 @@
 title: "International Place Names Inside the U.S."
 author: ""
 date: 2021-07-27
-date-modified: 2023-04-30
+date-modified: 2024-02-16
 description: "Identifying US municipalities that are a name, or part of their name, with that of a country or international city."
 categories: [ map, R ]
-image: "intl-cities-thumbnail.png"
+image: "intl-cities-ss.png"
 image-alt: ""
 editor_options: 
   chunk_output_type: console
@@ -51,8 +51,8 @@ The `maps` [package](https://cran.r-project.org/web/packages/maps/index.html) pr
 glimpse(maps::world.cities)
 ```
 
-- To narrow down the more than 43,500 cities, I'll filter for only cities with **more than 1 million residents**.
-- For each country and international city name, I will add to the end of each name `\\b`, the **regular expression** marking that it's the end of the word. This way, I will be able to search for US municipalities that contain the **name on its own**, either by itself or with another word but not as part of a word: This would include "*Canada* Shores, Michigan" but not "*Jordan*town, New Jersey."
+- To narrow down the more than 43,500 cities, I'll filter for only cities with **more than 1 million residents**, not including metro areas.
+- For each country and international city name, I will add to the end of each name `\\b`, the **regular expression** to indicate that it's the end of the word. This way, I will be able to search for US municipalities that contain the **name on its own**, either by itself or with another word but not as part of a word: This would include "*Canada* Shores, Michigan" but not "*Jordan*town, New Jersey."
 
 ```{r}
 cities_1m <- maps::world.cities %>%
@@ -106,6 +106,7 @@ Following the same steps above, this time matching US municipalities to internat
 - As "Serbia and Montenegro" was given as the country for "Belgrade", changing the name to "Serbia".
 
 ```{r}
+#| output: false
 city_matches <- us_muni_edit %>%
   # match US city to int'l city names
   mutate(match = str_extract(feature_name, paste(cities_1m$city_regex, collapse="|"))) %>%
@@ -135,7 +136,7 @@ sample_n(city_matches, 10)
 ```
 <hr />
 
-## One Final Thing
+## A Final List
 
 After exporting `city_matches` via `write_csv(city_matches, "city_matches.csv")`, I used `D3.js` to <a href="https://chejel.github.io/intl-cities-us">create a map</a> that lets users click a major non-US city and see the locations of US towns and cities that share the name. I'll save `country_matches` maybe for another time. 
 
