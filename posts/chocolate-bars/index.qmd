@@ -3,9 +3,10 @@ title: "Chocolate Bars"
 author: ""
 date: "2022-03-28"
 date-modified: "2023-04-05"
-description: "A color-coded world map made from a set of chocolate bar ratings."
+description: "A world map visualizing chocolate bar ratings."
 categories: [ "Tidy Tuesday", R, map ]
 image: "chocolate-map.png"
+image-alt: ""
 editor_options: 
   chunk_output_type: console
 ---

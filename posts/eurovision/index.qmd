@@ -2,7 +2,7 @@
 title: "A Eurovision History"
 author: ""
 date: "2022-06-01"
-description: "A look into the dataset reveals how the song competition has changed in the more than 65-year duration."
+description: "A look into a dataset of Eurovision results reveals how the song competition has changed during its more than 65-year duration."
 categories: [ "Tidy Tuesday", R ]
 image: "eurovision-thumbnail.png"
 image-alt: ""

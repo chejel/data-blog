@@ -3,7 +3,7 @@ title: "International Place Names Inside the U.S."
 author: ""
 date: 2021-07-27
 date-modified: 2024-02-16
-description: "Identifying US municipalities that are a name, or part of their name, with that of a country or international city."
+description: "Identifying U.S. municipalities that share a name, or part of their name, with a major international city."
 categories: [ map, R ]
 image: "intl-cities-ss.png"
 image-alt: ""
