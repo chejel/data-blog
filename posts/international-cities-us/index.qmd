@@ -22,7 +22,7 @@ This post describes how I put together the dataset for <a href="https://chejel.g
 
 The **[U.S. Board on Geographic Names](https://www.usgs.gov/us-board-on-geographic-names)** has available the names of **geographic entities** in U.S. states, including municipalities, buildings, properties, natural features and more. Data is also available on geographic names across the world.
 
-For this exercise, I [downloadeded the file](https://prd-tnm.s3.amazonaws.com/index.html?prefix=StagedProducts/GeographicNames/Topical/) `PopulatedPlaces_National_Text.zip` via the [Domestic Names](https://www.usgs.gov/us-board-on-geographic-names/domestic-names) page:
+For this exercise, I downloaded the file `PopulatedPlaces_National_Text.zip` via the U.S. Board on Geographic Names' [Domestic Names](https://www.usgs.gov/us-board-on-geographic-names/domestic-names) page (under "Direct Link to All Names Data Products"):
 ```{r message=FALSE, warning=FALSE, include=FALSE, paged.print=FALSE}
 library(tidyverse)
 library(tidygeocoder) # bulk geocoding
