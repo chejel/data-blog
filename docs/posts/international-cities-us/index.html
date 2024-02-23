@@ -8,7 +8,7 @@
 
 <meta name="author" content="">
 <meta name="dcterms.date" content="2021-07-27">
-<meta name="description" content="Identifying US municipalities that are a name, or part of their name, with that of a country or international city.">
+<meta name="description" content="Identifying U.S. municipalities that share a name, or part of their name, with a major international city.">
 
 <title>Jennifer Cheng - International Place Names Inside the U.S.</title>
 <style>
@@ -177,7 +177,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <h1 class="title">International Place Names Inside the U.S.</h1>
                   <div>
         <div class="description">
-          Identifying US municipalities that are a name, or part of their name, with that of a country or international city.
+          Identifying U.S. municipalities that share a name, or part of their name, with a major international city.
         </div>
       </div>
                           <div class="quarto-categories">
@@ -237,7 +237,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <section id="dataset-names-of-municipalities-in-the-us" class="level4">
 <h4 class="anchored" data-anchor-id="dataset-names-of-municipalities-in-the-us">Dataset: Names of municipalities in the US</h4>
 <p>The <strong><a href="https://www.usgs.gov/us-board-on-geographic-names">U.S. Board on Geographic Names</a></strong> has available the names of <strong>geographic entities</strong> in U.S. states, including municipalities, buildings, properties, natural features and more. Data is also available on geographic names across the world.</p>
-<p>For this exercise, I <a href="https://prd-tnm.s3.amazonaws.com/index.html?prefix=StagedProducts/GeographicNames/Topical/">downloadeded the file</a> <code>PopulatedPlaces_National_Text.zip</code> via the <a href="https://www.usgs.gov/us-board-on-geographic-names/domestic-names">Domestic Names</a> page:</p>
+<p>For this exercise, I downloaded the file <code>PopulatedPlaces_National_Text.zip</code> via the U.S. Board on Geographic Names’ <a href="https://www.usgs.gov/us-board-on-geographic-names/domestic-names">Domestic Names</a> page (under “Direct Link to All Names Data Products”):</p>
 <p>After scanning through the dataset, I’m removing places with <code>(historical)</code> in the name and without a geographic location provided.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>us_muni_edit <span class="ot">&lt;-</span> us_muni <span class="sc">%&gt;%</span></span>
@@ -405,7 +405,7 @@ $ capital     &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 <pre><code># A tibble: 10 × 9
    us_city       state…¹ us_ci…² us_ci…³ intl_…⁴ country city_…⁵ city_…⁶ conti…⁷
    &lt;chr&gt;         &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;  
- 1 New London    North …    35.4   -80.2 London  UK         51.5  -0.144 Europe 
+ 1 New London    North …    35.4   -80.2 London  UK         51.5  -0.128 Europe 
  2 Delhi         Ohio       39.1   -84.6 Delhi   India      28.6  77.2   Asia   
  3 Tripoli       Iowa       42.8   -92.3 Tripoli Libya      32.9  13.2   Africa 
  4 Paris Point   South …    34.9   -82.4 Paris   France     48.9   2.35  Europe 
@@ -413,7 +413,7 @@ $ capital     &lt;int&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
  6 Brussels      Illino…    38.9   -90.6 Brusse… Belgium    50.9   4.35  Europe 
  7 Melbourne     Missou…    40.1   -93.8 Melbou… Austra…   -37.8 145.    Oceania
  8 North Belgra… Maine      44.5   -69.8 Belgra… Serbia     44.8  20.5   Europe 
- 9 New London    Maryla…    39.4   -77.3 London  UK         51.5  -0.144 Europe 
+ 9 New London    Maryla…    39.4   -77.3 London  UK         51.5  -0.128 Europe 
 10 Prague        Arkans…    34.3   -92.3 Prague  Czech …    50.1  14.4   Europe 
 # … with abbreviated variable names ¹​state_name, ²​us_city_lat, ³​us_city_long,
 #   ⁴​intl_city, ⁵​city_lat, ⁶​city_long, ⁷​continent</code></pre>
